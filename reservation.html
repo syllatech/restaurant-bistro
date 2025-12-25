@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation | Le Bistro Gourmand</title>
+    
+    <!-- Inclure tous les mêmes liens CSS que index.html -->
+    <!-- Copier les liens CSS de index.html -->
+    
+    <style>
+        .reservation-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .time-slot {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .time-slot:hover {
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .time-slot.selected {
+            border-color: #D4AF37;
+            background: #D4AF37;
+            color: white;
+        }
+        
+        .time-slot.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-day:hover {
+            background: #f8f9fa;
+        }
+        
+        .calendar-day.selected {
+            background: #D4AF37;
+            color: white;
+        }
+        
+        .calendar-day.unavailable {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .step-indicator {
+            position: relative;
+            padding-bottom: 30px;
+        }
+        
+        .step-indicator::after {
+            content: '';
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: #dee2e6;
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #dee2e6;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+        
+        .step.active {
+            background: #D4AF37;
+            color: white;
+        }
+        
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+    </style>
+</head>
+<body class="font-opensans">
+    <!-- Navigation (identique à index.html) -->
+    
+    <!-- Hero -->
+    <section class="reservation-hero text-white py-5">
+        <div class="container py-5 mt-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-3 font-playfair mb-4">Réserver une Table</h1>
+                    <p class="lead mb-4">
+                        Réservez votre table en quelques clics. Notre équipe vous confirmera 
+                        votre réservation dans les plus brefs délais.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de Réservation -->
+    <section class="py-5">
+        <div class="container py-5">
+            <!-- Étapes -->
+            <div class="row mb-5">
+                <div class="col-md-8 mx-auto">
+                    <div class="step-indicator">
+                        <div class="row">
+                            <div class="col-3 text-center">
+                                <div class="step active" id="step1">1</div>
+                                <p class="mt-2 small fw-bold">Date & Heure</p>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step" id="step2">2</div>
+                                <p class="mt-2 small text-muted">Détails</p>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step" id="step3">3</div>
+                                <p class="mt-2 small text-muted">Confirmation</p>
+                            </div>
+                            <div class="col-3 text-center">
+                                <div class="step" id="step4">4</div>
+                                <p class="mt-2 small text-muted">Terminé</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Étape 1: Date & Heure -->
+            <div class="row" id="step1-content">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow border-0">
+                        <div class="card-body p-4">
+                            <h3 class="font-playfair mb-4">
+                                <i class="far fa-calendar-alt text-gold me-2"></i>Choisissez une date et une heure
+                            </h3>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h5 class="mb-3">Calendrier</h5>
+                                    <div class="border rounded p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <button class="btn btn-outline-secondary btn-sm prev-month">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <h6 class="mb-0 fw-bold" id="current-month">Décembre 2024</h6>
+                                            <button class="btn btn-outline-secondary btn-sm next-month">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="row text-center small fw-bold mb-2">
+                                            <div class="col p-1">Lun</div>
+                                            <div class="col p-1">Mar</div>
+                                            <div class="col p-1">Mer</div>
+                                            <div class="col p-1">Jeu</div>
+                                            <div class="col p-1">Ven</div>
+                                            <div class="col p-1">Sam</div>
+                                            <div class="col p-1">Dim</div>
+                                        </div>
+                                        
+                                        <div id="calendar-days" class="row">
+                                            <!-- Jours générés par JavaScript -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <label class="form-label fw-bold">Nombre de personnes</label>
+                                        <select class="form-select" id="guests">
+                                            <option value="1">1 personne</option>
+                                            <option value="2" selected>2 personnes</option>
+                                            <option value="3">3 personnes</option>
+                                            <option value="4">4 personnes</option>
+                                            <option value="5">5 personnes</option>
+                                            <option value="6">6 personnes</option>
+                                            <option value="7">7 personnes</option>
+                                            <option value="8">8 personnes</option>
+                                            <option value="9">9 personnes</option>
+                                            <option value="10">10+ personnes (contactez-nous)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Heures disponibles</h5>
+                                    <div id="time-slots" class="row">
+                                        <!-- Créneaux générés par JavaScript -->
+                                    </div>
+                                    
+                                    <div class="mt-4 p-3 bg-light rounded">
+                                        <h6><i class="fas fa-info-circle text-gold me-2"></i>Informations</h6>
+                                        <p class="small mb-0">
+                                            • Réservation recommandée 48h à l'avance<br>
+                                            • Service en continu de 12h à 14h30 et 19h à 23h<br>
+                                            • Tenue correcte exigée
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 text-end">
+                                <button class="btn-gold btn" onclick="nextStep(2)">
+                                    Suivant <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Étape 2: Détails -->
+            <div class="row d-none" id="step2-content">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card shadow border-0">
+                        <div class="card-body p-4">
+                            <h3 class="font-playfair mb-4">
+                                <i class="fas fa-user text-gold me-2"></i>Vos informations
+                            </h3>
+                            
+                            <form id="reservation-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Prénom *</label>
+                                        <input type="text" class="form-control" id="first-name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Nom *</label>
+                                        <input type="text" class="form-control" id="last-name" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Email *</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Téléphone *</label>
+                                        <input type="tel" class="form-control" id="phone" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Demandes spéciales</label>
+                                    <textarea class="form-control" id="special-requests" rows="3" 
+                                              placeholder="Anniversaire, allergies, préférences..."></textarea>
+                                    <div class="form-text small">
+                                        Nous ferons notre possible pour répondre à vos demandes
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="newsletter" checked>
+                                        <label class="form-check-label small" for="newsletter">
+                                            Je souhaite recevoir les offres spéciales et actualités du restaurant
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" onclick="prevStep(1)">
+                                    <i class="fas fa-arrow-left me-2"></i>Retour
+                                </button>
+                                <button class="btn-gold btn" onclick="nextStep(3)">
+                                    Suivant <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+    
+            <!-- Étape 3: Confirmation -->
+            <div class="row d-none" id="step3-content">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow border-0">
+                        <div class="card-body p-4">
+                            <h3 class="font-playfair mb-4">
+                                <i class="fas fa-check-circle text-gold me-2"></i>Confirmer votre réservation
+                            </h3>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="bg-light rounded p-4 mb-4">
+                                        <h5 class="fw-bold mb-3">Résumé</h5>
+                                        <div id="reservation-summary">
+                                            <!-- Rempli par JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="border rounded p-4">
+                                        <h5 class="fw-bold mb-3">Politique de réservation</h5>
+                                        <ul class="small">
+                                            <li class="mb-2">Merci d'arriver à l'heure prévue</li>
+                                            <li class="mb-2">En cas de retard > 15 min, votre table pourra être réattribuée</li>
+                                            <li class="mb-2">Annulation gratuite jusqu'à 24h avant</li>
+                                            <li class="mb-2">Pour les groupes > 6 personnes, prépaiement de 30€/pers.</li>
+                                            <li>Nos salles sont non-fumeurs</li>
+                                        </ul>
+                                        
+                                        <div class="form-check mt-3">
+                                            <input class="form-check-input" type="checkbox" id="accept-terms" required>
+                                            <label class="form-check-label small" for="accept-terms">
+                                                Je comprends et j'accepte les conditions de réservation
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" onclick="prevStep(2)">
+                                    <i class="fas fa-arrow-left me-2"></i>Retour
+                                </button>
+                                <button class="btn-gold btn" onclick="submitReservation()">
+                                    Confirmer la réservation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Étape 4: Terminé -->
+            <div class="row d-none" id="step4-content">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card shadow border-0">
+                        <div class="card-body p-4 text-center">
+                            <div class="mb-4">
+                                <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center" 
+                                     style="width: 80px; height: 80px;">
+                                    <i class="fas fa-check text-white fs-3"></i>
+                                </div>
+                            </div>
+                            
+                            <h3 class="font-playfair mb-3">Réservation confirmée !</h3>
+                            
+                            <p class="mb-4">
+                                Merci <span id="confirmed-name"></span>, votre table est réservée.
+                                Un email de confirmation a été envoyé à <span id="confirmed-email"></span>.
+                            </p>
+                            
+                            <div class="bg-light rounded p-4 mb-4 text-start">
+                                <h6 class="fw-bold mb-3">Détails de votre réservation</h6>
+                                <div id="confirmation-details">
+                                    <!-- Rempli par JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <p class="text-muted small mb-4">
+                                <i class="fas fa-phone text-gold me-1"></i>
+                                Pour toute modification, contactez-nous au 01 23 45 67 89
+                            </p>
+                            
+                            <div class="d-flex gap-3 justify-content-center">
+                                <a href="index.html" class="btn-gold btn">
+                                    <i class="fas fa-home me-2"></i>Retour à l'accueil
+                                </a>
+                                <a href="menu.html" class="btn btn-outline-dark">
+                                    <i class="fas fa-book me-2"></i>Voir le menu
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+    <p class="text-muted small">
+        Besoin d'aide pour choisir une date ou un créneau ?
+        <button class="btn btn-link p-0" onclick="chatbot.toggleChatbot()">
+            Demandez à notre assistant <i class="fas fa-robot ms-1"></i>
+        </button>
+    </p>
+</div>
+    </section>
+            
+    <!-- Footer (identique à index.html) -->
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/reservation.js"></script>
+    
+    <script>
+        // Variables globales pour la réservation
+        let reservationData = {
+            date: '',
+            time: '',
+            guests: 2,
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            requests: ''
+        };
+        
+        // Fonctions pour naviguer entre les étapes
+        function nextStep(step) {
+            // Valider l'étape actuelle
+            if (step === 2 && !validateStep1()) {
+                alert('Veuillez sélectionner une date et une heure');
+                return;
+            }
+            if (step === 3 && !validateStep2()) {
+                alert('Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            if (step === 4 && !validateStep3()) {
+                alert('Veuillez accepter les conditions');
+                return;
+            }
+            
+            // Cacher toutes les étapes
+            document.querySelectorAll('[id$="-content"]').forEach(el => {
+                el.classList.add('d-none');
+            });
+            
+            // Afficher l'étape demandée
+            document.getElementById(`step${step}-content`).classList.remove('d-none');
+            
+            // Mettre à jour les indicateurs
+            updateStepIndicators(step);
+            
+            // Pré-remplir l'étape 4 si nécessaire
+            if (step === 4) {
+                showConfirmation();
+            }
+        }
+        
+        function prevStep(step) {
+            nextStep(step);
+        }
+        
+        function validateStep1() {
+            return reservationData.date && reservationData.time;
+        }
+        
+        function validateStep2() {
+            const form = document.getElementById('reservation-form');
+            return form.checkValidity();
+        }
+        
+        function validateStep3() {
+            return document.getElementById('accept-terms').checked;
+        }
+        
+        function updateStepIndicators(currentStep) {
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.classList.remove('active', 'completed');
+                
+                if (i < currentStep) {
+                    step.classList.add('completed');
+                } else if (i === currentStep) {
+                    step.classList.add('active');
+                }
+            }
+        }
+        
+        function showConfirmation() {
+            document.getElementById('confirmed-name').textContent = 
+                `${reservationData.firstName} ${reservationData.lastName}`;
+            document.getElementById('confirmed-email').textContent = reservationData.email;
+            
+            const details = `
+                <p><strong>Date:</strong> ${formatDate(reservationData.date)}</p>
+                <p><strong>Heure:</strong> ${reservationData.time}</p>
+                <p><strong>Personnes:</strong> ${reservationData.guests}</p>
+                <p><strong>Téléphone:</strong> ${reservationData.phone}</p>
+                ${reservationData.requests ? `<p><strong>Demandes:</strong> ${reservationData.requests}</p>` : ''}
+            `;
+            document.getElementById('confirmation-details').innerHTML = details;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        
+        function submitReservation() {
+            // Sauvegarder dans le localStorage
+            const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+            const reservation = {
+                id: Date.now(),
+                ...reservationData,
+                status: 'confirmed',
+                createdAt: new Date().toISOString()
+            };
+            reservations.push(reservation);
+            localStorage.setItem('reservations', JSON.stringify(reservations));
+            
+            // Passer à l'étape 4
+            nextStep(4);
+        }
+        
+        // Initialiser
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les gestionnaires d'événements
+            initReservation();
+        });
+    </script>
+    <!-- Dans tous les fichiers HTML, ajoute ceci avant </body> -->
+<script src="js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu | Le Bistro Gourmand</title>
+    
+    <!-- Inclure tous les mêmes liens CSS que index.html -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .menu-category {
+            position: relative;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .menu-category::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: #D4AF37;
+        }
+        
+        .menu-item {
+            border-bottom: 1px dashed #dee2e6;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background: rgba(212, 175, 55, 0.05);
+            padding-left: 10px;
+            padding-right: 10px;
+            margin: 0 -10px;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .price {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #D4AF37;
+            font-size: 1.2rem;
+        }
+        
+        .badge-veg {
+            background: #28a745;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .badge-spicy {
+            background: #dc3545;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .filter-btn.active {
+            background: #D4AF37;
+            color: white;
+            border-color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="font-opensans">
+    <!-- Navigation (identique à index.html) -->
+    <!-- Copier toute la navbar de index.html ici -->
+    
+    <!-- Hero Menu -->
+    <section class="bg-dark text-white py-5" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80'); background-size: cover; background-position: center;">
+        <div class="container py-5 mt-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-3 font-playfair mb-4">Notre Carte</h1>
+                    <p class="lead mb-4">
+                        Découvrez notre menu élaboré avec les meilleurs produits de saison. 
+                        Tous nos plats sont préparés sur place par notre équipe de chefs passionnés.
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <button class="btn btn-outline-light filter-btn active" data-filter="all">Tout</button>
+                        <button class="btn btn-outline-light filter-btn" data-filter="entrees">Entrées</button>
+                        <button class="btn btn-outline-light filter-btn" data-filter="plats">Plats Principaux</button>
+                        <button class="btn btn-outline-light filter-btn" data-filter="desserts">Desserts</button>
+                        <button class="btn btn-outline-light filter-btn" data-filter="boissons">Boissons</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Sections -->
+    <section class="py-5 bg-cream">
+        <div class="container py-5">
+            <!-- Entrées -->
+            <div class="menu-category" data-category="entrees">
+                <h2 class="font-playfair display-5 mb-4">
+                    <i class="fas fa-seedling text-gold me-2"></i>Entrées
+                </h2>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Terrine de Foie Gras Maison</h4>
+                                    <p class="text-muted small mb-2">Toast, confiture d'oignons</p>
+                                    <span class="badge-veg me-1">Végétarien</span>
+                                </div>
+                                <div class="price">18€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Salade de Homard</h4>
+                                    <p class="text-muted small mb-2">Avocat, mangue, vinaigrette citron vert</p>
+                                </div>
+                                <div class="price">24€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Escargots de Bourgogne</h4>
+                                    <p class="text-muted small mb-2">Persillade, beurre à l'ail</p>
+                                    <span class="badge-spicy">Épicé</span>
+                                </div>
+                                <div class="price">16€</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 d-none d-lg-block">
+                        <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                             class="img-fluid rounded-3 shadow" 
+                             alt="Entrées">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plats Principaux -->
+            <div class="menu-category mt-5" data-category="plats">
+                <h2 class="font-playfair display-5 mb-4">
+                    <i class="fas fa-utensils text-gold me-2"></i>Plats Principaux
+                </h2>
+                
+                <div class="row">
+                    <div class="col-lg-4 d-none d-lg-block">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                             class="img-fluid rounded-3 shadow" 
+                             alt="Plats">
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Filet de Bœuf Rossini</h4>
+                                    <p class="text-muted small mb-2">Foie gras, sauce au porto, pommes dauphine</p>
+                                </div>
+                                <div class="price">38€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Bar de Ligne Rôti</h4>
+                                    <p class="text-muted small mb-2">Risotto aux petits pois, émulsion au citron</p>
+                                    <span class="badge-veg me-1">Végétarien</span>
+                                </div>
+                                <div class="price">32€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Risotto aux Champignons Sauvages</h4>
+                                    <p class="text-muted small mb-2">Truffes d'été, parmesan 24 mois</p>
+                                    <span class="badge-veg">Végétarien</span>
+                                </div>
+                                <div class="price">26€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Carré d'Agneau Rôti</h4>
+                                    <p class="text-muted small mb-2">Gratin dauphinois, jus réduit au thym</p>
+                                </div>
+                                <div class="price">35€</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desserts -->
+            <div class="menu-category mt-5" data-category="desserts">
+                <h2 class="font-playfair display-5 mb-4">
+                    <i class="fas fa-ice-cream text-gold me-2"></i>Desserts
+                </h2>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Soufflé au Chocolat Grand Marnier</h4>
+                                    <p class="text-muted small mb-2">Glace vanille de Madagascar</p>
+                                </div>
+                                <div class="price">14€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Tarte Fine aux Pommes</h4>
+                                    <p class="text-muted small mb-2">Sorbet calvados, caramel au beurre salé</p>
+                                    <span class="badge-veg">Végétarien</span>
+                                </div>
+                                <div class="price">12€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h4 class="font-playfair h5 mb-1">Assiette de Fromages Affinés</h4>
+                                    <p class="text-muted small mb-2">Sélection du moment, noix, raisin</p>
+                                    <span class="badge-veg">Végétarien</span>
+                                </div>
+                                <div class="price">16€</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 d-none d-lg-block">
+                        <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                             class="img-fluid rounded-3 shadow" 
+                             alt="Desserts">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Boissons -->
+            <div class="menu-category mt-5" data-category="boissons">
+                <h2 class="font-playfair display-5 mb-4">
+                    <i class="fas fa-wine-glass-alt text-gold me-2"></i>Vins & Boissons
+                </h2>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="font-playfair h5 mb-3 text-burgundy">Vins Rouges</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold">Château Margaux 2015</h6>
+                                    <p class="text-muted small">Bordeaux, Grand Cru Classé</p>
+                                </div>
+                                <div class="price">180€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold">Domaine de la Romanée-Conti 2016</h6>
+                                    <p class="text-muted small">Bourgogne</p>
+                                </div>
+                                <div class="price">420€</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h4 class="font-playfair h5 mb-3 text-burgundy">Vins Blancs</h4>
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold">Montrachet 2017</h6>
+                                    <p class="text-muted small">Bourgogne, Grand Cru</p>
+                                </div>
+                                <div class="price">160€</div>
+                            </div>
+                        </div>
+                        
+                        <div class="menu-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="fw-bold">Château d'Yquem 2015</h6>
+                                    <p class="text-muted small">Sauternes, 1er Cru Supérieur</p>
+                                </div>
+                                <div class="price">220€</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-5 bg-dark text-white text-center">
+        <div class="container py-5">
+            <h2 class="display-5 font-playfair mb-4">Prêt à réserver votre table ?</h2>
+            <p class="lead mb-5 max-w-2xl mx-auto">
+                Notre équipe est à votre disposition pour vous conseiller et vous accueillir dans les meilleures conditions.
+            </p>
+            <a href="reservation.html" class="btn-gold btn btn-lg px-5">
+                <i class="fas fa-calendar-alt me-2"></i>Réserver maintenant
+            </a>
+        </div>
+    </section>
+<div class="text-center mt-3">
+    <button class="btn btn-outline-dark btn-sm" onclick="chatbot.toggleChatbot()">
+        <i class="fas fa-robot me-1"></i>Recommandations ?
+    </button>
+</div>
+    <!-- Footer (identique à index.html) -->
+    <!-- Copier le footer de index.html ici -->
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/menu.js"></script>
+    
+    <script>
+        // Filtrage du menu
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Activer le bouton cliqué
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                // Filtrer les sections
+                document.querySelectorAll('.menu-category').forEach(section => {
+                    if (filter === 'all' || section.dataset.category === filter) {
+                        section.style.display = 'block';
+                        setTimeout(() => {
+                            section.style.opacity = '1';
+                        }, 10);
+                    } else {
+                        section.style.opacity = '0';
+                        setTimeout(() => {
+                            section.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- Dans tous les fichiers HTML, ajoute ceci avant </body> -->
+<script src="js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Le Bistro Gourmand</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gold': '#D4AF37',
+                        'burgundy': '#800020',
+                        'cream': '#FFF8E7'
+                    },
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                        'opensans': ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Personnalisé -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .contact-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .contact-card {
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-control:focus, .form-select:focus, .form-check-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        }
+        
+        .map-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #dee2e6;
+            padding: 20px 0;
+        }
+        
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        
+        .faq-question {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding-top: 15px;
+        }
+        
+        .faq-item.active .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="font-opensans">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg py-3">
+        <div class="container">
+            <a class="navbar-brand font-playfair fs-3" href="index.html">
+                <i class="fas fa-utensils text-gold me-2"></i>
+                Le Bistro Gourmand
+            </a>
+            
+            <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">À Propos</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-gold ms-lg-3 mt-2 mt-lg-0" href="reservation.html">
+                            <i class="fas fa-calendar-check me-2"></i>Réserver
+                        </a>
+                    </li>
+                    
+                    <!-- Panier Desktop -->
+                    <li class="nav-item ms-lg-3 position-relative d-none d-lg-block">
+                        <a href="#" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            <span class="cart-badge">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="contact-hero text-white py-5 d-flex align-items-center min-vh-100 pt-5">
+        <div class="container pt-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h6 class="text-gold fw-bold mb-3">NOUS CONTACTER</h6>
+                    <h1 class="display-2 fw-bold font-playfair mb-4">
+                        Restons <span class="text-gold">en Contact</span>
+                    </h1>
+                    <p class="lead fs-4 mb-5 opacity-90">
+                        Une question, une demande spéciale, ou simplement envie de nous dire bonjour ? 
+                        Nous sommes à votre écoute.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Informations Contact -->
+    <section class="py-5 bg-cream">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="contact-card bg-white p-4 shadow-sm text-center h-100">
+                        <div class="contact-icon mx-auto">
+                            <i class="fas fa-map-marker-alt fs-4 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair mb-3">Notre Adresse</h4>
+                        <p class="text-muted mb-0">
+                            123 Avenue des Champs-Élysées<br>
+                            75008 Paris, France
+                        </p>
+                        <a href="#map" class="btn btn-outline-gold btn-sm mt-3">
+                            <i class="fas fa-directions me-1"></i>Itinéraire
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="contact-card bg-white p-4 shadow-sm text-center h-100">
+                        <div class="contact-icon mx-auto">
+                            <i class="fas fa-phone fs-4 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair mb-3">Téléphone</h4>
+                        <p class="text-muted mb-0">
+                            Réservations: 01 23 45 67 89<br>
+                            Administration: 01 23 45 67 90
+                        </p>
+                        <a href="tel:+33123456789" class="btn btn-outline-gold btn-sm mt-3">
+                            <i class="fas fa-phone me-1"></i>Appeler maintenant
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="contact-card bg-white p-4 shadow-sm text-center h-100">
+                        <div class="contact-icon mx-auto">
+                            <i class="fas fa-envelope fs-4 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair mb-3">Email</h4>
+                        <p class="text-muted mb-0">
+                            Réservations: reservations@bistrogourmand.fr<br>
+                            Contact: contact@bistrogourmand.fr
+                        </p>
+                        <a href="mailto:contact@bistrogourmand.fr" class="btn btn-outline-gold btn-sm mt-3">
+                            <i class="fas fa-envelope me-1"></i>Envoyer un email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulaire de Contact & Carte -->
+    <section class="py-5" id="contact-form-section">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h2 class="font-playfair display-5 mb-4">Envoyez-nous un message</h2>
+                    <p class="lead mb-5">
+                        Notre équipe vous répondra dans les plus brefs délais.
+                    </p>
+                    
+                    <form id="contact-form" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="firstName" class="form-label fw-bold">Prénom *</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer votre prénom.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="lastName" class="form-label fw-bold">Nom *</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer votre nom.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="email" class="form-label fw-bold">Email *</label>
+                                <input type="email" class="form-control" id="email" required>
+                                <div class="invalid-feedback">
+                                    Veuillez entrer une adresse email valide.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="phone" class="form-label fw-bold">Téléphone</label>
+                                <input type="tel" class="form-control" id="phone">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="subject" class="form-label fw-bold">Sujet *</label>
+                            <select class="form-select" id="subject" required>
+                                <option value="">Choisir un sujet</option>
+                                <option value="reservation">Réservation</option>
+                                <option value="information">Demande d'information</option>
+                                <option value="group">Événement de groupe</option>
+                                <option value="allergy">Allergies/Préférences</option>
+                                <option value="other">Autre</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Veuillez choisir un sujet.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-bold">Message *</label>
+                            <textarea class="form-control" id="message" rows="5" required 
+                                      placeholder="Votre message..."></textarea>
+                            <div class="invalid-feedback">
+                                Veuillez entrer votre message.
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="newsletter" checked>
+                            <label class="form-check-label small" for="newsletter">
+                                Je souhaite recevoir les offres spéciales et actualités du restaurant
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn-gold btn btn-lg w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Envoyer le message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="sticky-top" style="top: 100px;">
+                        <h2 class="font-playfair display-5 mb-4" id="map">Nous trouver</h2>
+                        
+                        <!-- Carte Google Maps -->
+                        <div class="map-container mb-5">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.991625693758!2d2.292292615509614!3d48.85837360866186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!2m3!1e0!2sm!3i456!4m3!3m2!1i1024!2i768!4f13.1"
+                                width="100%" 
+                                height="400" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                        
+                        <!-- Horaires -->
+                        <div class="bg-light rounded-4 p-4">
+                            <h4 class="font-playfair mb-3">
+                                <i class="fas fa-clock text-gold me-2"></i>Horaires d'ouverture
+                            </h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Lundi - Jeudi</span>
+                                    <span class="fw-bold">12h-14h30 / 19h-23h</span>
+                                </li>
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Vendredi</span>
+                                    <span class="fw-bold">12h-14h30 / 19h-minuit</span>
+                                </li>
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Samedi</span>
+                                    <span class="fw-bold">12h-15h / 19h-minuit</span>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Dimanche</span>
+                                    <span class="fw-bold">12h-16h</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Réseaux Sociaux -->
+                        <div class="mt-4">
+                            <h5 class="fw-bold mb-3">Suivez-nous</h5>
+                            <div class="d-flex gap-3">
+                                <a href="#" class="social-link bg-facebook text-white">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="social-link bg-instagram text-white">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="social-link bg-twitter text-white">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link bg-tripadvisor text-white">
+                                    <i class="fab fa-tripadvisor"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-5 bg-cream">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="font-playfair display-5 mb-3">Questions Fréquentes</h2>
+                <p class="lead text-muted max-w-3xl mx-auto">
+                    Retrouvez les réponses aux questions les plus courantes
+                </p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="bg-white rounded-4 shadow-sm p-4">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                <h5 class="fw-bold mb-0">Quelle est la politique d'annulation ?</h5>
+                                <i class="fas fa-chevron-down text-gold"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p class="text-muted mb-0">
+                                    Vous pouvez annuler gratuitement jusqu'à 24h avant votre réservation. 
+                                    Pour les groupes de plus de 6 personnes, un prépaiement de 30€ par personne 
+                                    est requis et remboursable jusqu'à 48h avant.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h5 class="fw-bold mb-0">Proposez-vous des menus végétariens/végétaliens ?</h5>
+                                <i class="fas fa-chevron-down text-gold"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p class="text-muted mb-0">
+                                    Oui, nous proposons plusieurs options végétariennes et pouvons adapter 
+                                    nos plats pour les régimes végétaliens. Merci de nous prévenir au moment 
+                                    de la réservation.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h5 class="fw-bold mb-0">Avez-vous un parking ?</h5>
+                                <i class="fas fa-chevron-down text-gold"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p class="text-muted mb-0">
+                                    Oui, nous disposons d'un parking privé gratuit pour nos clients. 
+                                    Il est situé à 50m du restaurant et offre 20 places de stationnement.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h5 class="fw-bold mb-0">Acceptez-vous les animaux ?</h5>
+                                <i class="fas fa-chevron-down text-gold"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p class="text-muted mb-0">
+                                    Les animaux de petite taille sont acceptés sur la terrasse uniquement. 
+                                    Les animaux d'assistance sont les bienvenus partout dans le restaurant.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                <h5 class="fw-bold mb-0">Proposez-vous un service traiteur ?</h5>
+                                <i class="fas fa-chevron-down text-gold"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p class="text-muted mb-0">
+                                    Oui, nous proposons un service traiteur pour vos événements privés 
+                                    (mariages, séminaires, anniversaires). Contactez-nous pour un devis personnalisé.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Réservation -->
+    <section class="py-5 bg-dark text-white text-center">
+        <div class="container py-5">
+            <h2 class="display-5 font-playfair mb-4">Prêt à réserver ?</h2>
+            <p class="lead mb-5 max-w-2xl mx-auto">
+                Notre équipe est disponible pour répondre à toutes vos questions 
+                et vous aider à planifier votre visite.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="reservation.html" class="btn-gold btn btn-lg px-5">
+                    <i class="fas fa-calendar-alt me-2"></i>Réserver en ligne
+                </a>
+                <a href="tel:+33123456789" class="btn btn-outline-light btn-lg px-5">
+                    <i class="fas fa-phone me-2"></i>Appeler maintenant
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="font-playfair mb-3">
+                        <i class="fas fa-utensils text-gold me-2"></i>Le Bistro Gourmand
+                    </h3>
+                    <p class="text-white-50 mb-4">
+                        Excellence culinaire depuis 1995. Découvrez l'art de la gastronomie 
+                        française dans un cadre élégant et chaleureux.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-tripadvisor"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Liens Rapides</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="menu.html" class="text-white-50 text-decoration-none">Menu</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none">Notre Histoire</a></li>
+                        <li class="mb-2"><a href="reservation.html" class="text-white-50 text-decoration-none">Réservation</a></li>
+                        <li><a href="#contact-form-section" class="text-white-50 text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p class="text-white-50 small mb-3">
+                        Inscrivez-vous pour recevoir nos offres spéciales
+                    </p>
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Votre email">
+                        <button class="btn btn-gold" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="text-white-50 my-4">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-white-50 small mb-0">
+                        © 2024 Le Bistro Gourmand. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-white-50 small mb-0">
+                        <a href="#" class="text-white-50 text-decoration-none me-3">Mentions légales</a>
+                        <a href="#" class="text-white-50 text-decoration-none">Politique de confidentialité</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de confirmation -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-playfair">Message envoyé !</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="fas fa-check text-white fs-3"></i>
+                    </div>
+                    <h4 class="mb-3">Merci pour votre message</h4>
+                    <p class="text-muted">
+                        Nous avons bien reçu votre message et vous répondrons 
+                        dans les plus brefs délais.
+                    </p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn-gold btn" data-bs-dismiss="modal">
+                        Continuer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="alert alert-info">
+    <i class="fas fa-robot me-2"></i>
+    <strong>Assistant disponible</strong> - Notre chatbot peut répondre à la plupart de vos questions immédiatement.
+    <button class="btn btn-sm btn-info ms-2" onclick="chatbot.toggleChatbot()">
+        Essayer maintenant
+    </button>
+</div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript Personnalisé -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si admin connecté
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                const adminLink = document.createElement('li');
+                adminLink.className = 'nav-item ms-lg-3';
+                adminLink.innerHTML = `
+                    <a class="nav-link text-warning" href="admin-dashboard.html">
+                        <i class="fas fa-user-cog me-1"></i>Admin
+                    </a>
+                `;
+                document.querySelector('.navbar-nav').appendChild(adminLink);
+            }
+            
+            // Gestion du formulaire de contact
+            const contactForm = document.getElementById('contact-form');
+            const confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            
+            contactForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                if (this.checkValidity()) {
+                    // Récupérer les données du formulaire
+                    const formData = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        subject: document.getElementById('subject').value,
+                        message: document.getElementById('message').value,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Sauvegarder dans localStorage
+                    let contacts = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+                    contacts.push(formData);
+                    localStorage.setItem('contactMessages', JSON.stringify(contacts));
+                    
+                    // Afficher la confirmation
+                    confirmationModal.show();
+                    
+                    // Réinitialiser le formulaire
+                    this.reset();
+                    this.classList.remove('was-validated');
+                    
+                    // Notification pour l'admin
+                    if (localStorage.getItem('adminLoggedIn') === 'true') {
+                        const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                        notifications.push({
+                            type: 'new_contact',
+                            message: `Nouveau message de ${formData.firstName} ${formData.lastName}`,
+                            timestamp: new Date().toISOString(),
+                            read: false
+                        });
+                        localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+                    }
+                } else {
+                    this.classList.add('was-validated');
+                }
+            });
+            
+            // Gestion des FAQ
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.closest('.faq-item');
+                    faqItem.classList.toggle('active');
+                });
+            });
+            
+            // Couleurs des réseaux sociaux
+            const style = document.createElement('style');
+            style.textContent = `
+                .bg-facebook { background: #3b5998; }
+                .bg-instagram { background: #e4405f; }
+                .bg-twitter { background: #1da1f2; }
+                .bg-tripadvisor { background: #00af87; }
+                
+                .bg-facebook:hover { background: #2d4373; }
+                .bg-instagram:hover { background: #d10869; }
+                .bg-twitter:hover { background: #0d8bd9; }
+                .bg-tripadvisor:hover { background: #008c6d; }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+    <!-- Dans tous les fichiers HTML, ajoute ceci avant </body> -->
+<script src="js/chatbot.js"></script>
+</body>
+</html>

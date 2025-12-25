@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Bistro Gourmand | Restaurant Gastronomique Paris</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gold': '#D4AF37',
+                        'burgundy': '#800020',
+                        'cream': '#FFF8E7'
+                    },
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                        'opensans': ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Personnalisé -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    
+    <style>
+        /* TES STYLES EXISTANTS - GARDÉS INTACTS */
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .dish-card {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .dish-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .dish-card img {
+            transition: transform 0.5s ease;
+        }
+        
+        .dish-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        .testimonial-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid #D4AF37;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 3px;
+            background: #D4AF37;
+            bottom: -10px;
+            left: 20%;
+        }
+        
+        .btn-gold {
+            background: linear-gradient(45deg, #D4AF37, #F4CA16);
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+            color: white;
+        }
+        
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 1000;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* STYLES CHATBOT DISCRETS */
+        .chatbot-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #D4AF37, #F4CA16);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+        }
+    </style>
+</head>
+<body class="font-opensans">
+    
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/33612345678?text=Bonjour%20je%20souhaiterais%20réserver%20une%20table" 
+       class="floating-whatsapp btn btn-success btn-lg rounded-circle shadow-lg" 
+       target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg py-3">
+        <div class="container">
+            <a class="navbar-brand font-playfair fs-3" href="index.html">
+                <i class="fas fa-utensils text-gold me-2"></i>
+                Le Bistro Gourmand
+            </a>
+            
+            <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">À Propos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-gold ms-lg-3 mt-2 mt-lg-0" href="reservation.html">
+                            <i class="fas fa-calendar-check me-2"></i>Réserver
+                        </a>
+                    </li>
+                    
+                    <!-- Assistant Chatbot dans Navbar (Optionnel) -->
+                    <li class="nav-item ms-lg-2">
+                        <button class="nav-link btn btn-link text-gold" onclick="window.chatbot?.toggleChatbot()">
+                            <i class="fas fa-robot me-1"></i>
+                            <span class="d-none d-lg-inline">Assistant</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white d-flex align-items-center min-vh-100 pt-5">
+        <div class="container pt-5">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h6 class="text-gold mb-3"><i class="fas fa-star me-2"></i>Depuis 1995</h6>
+                    <h1 class="display-2 fw-bold font-playfair mb-4">
+                        Une Expérience <span class="text-gold">Culinaire</span> Inoubliable
+                    </h1>
+                    <p class="lead fs-4 mb-5 opacity-90">
+                        Découvrez l'art de la gastronomie française dans un cadre élégant au cœur de Paris. 
+                        Des produits frais, une cuisine créative et un service d'exception.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="reservation.html" class="btn-gold btn btn-lg">
+                            <i class="fas fa-table me-2"></i>Réserver une Table
+                        </a>
+                        <a href="menu.html" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-book me-2"></i>Découvrir le Menu
+                        </a>
+                    </div>
+                    
+                    <!-- Info Badges -->
+                    <div class="row mt-5 pt-4">
+                        <div class="col-md-3 col-6">
+                            <div class="text-center">
+                                <div class="icon-box" style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fas fa-clock fs-4 text-gold"></i>
+                                </div>
+                                <p class="mb-0 fw-bold">Ouvert 7j/7</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center">
+                                <div class="icon-box" style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fas fa-wine-glass-alt fs-4 text-gold"></i>
+                                </div>
+                                <p class="mb-0 fw-bold">Cave à Vin</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center">
+                                <div class="icon-box" style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fas fa-users fs-4 text-gold"></i>
+                                </div>
+                                <p class="mb-0 fw-bold">Événements</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="text-center">
+                                <div class="icon-box" style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                    <i class="fas fa-parking fs-4 text-gold"></i>
+                                </div>
+                                <p class="mb-0 fw-bold">Parking Gratuit</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-5 mt-5 mt-lg-0">
+                    <!-- Reservation Card -->
+                    <div class="bg-white rounded-4 shadow-lg p-4 text-dark">
+                        <h4 class="font-playfair mb-4 text-center">
+                            <i class="fas fa-calendar-alt text-gold me-2"></i>Réservation Rapide
+                        </h4>
+                        <form id="quick-reservation">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" id="quick-date" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" id="quick-time" required>
+                                        <option value="">Heure</option>
+                                        <option>12:00</option>
+                                        <option>12:30</option>
+                                        <option>13:00</option>
+                                        <option>19:00</option>
+                                        <option>19:30</option>
+                                        <option>20:00</option>
+                                        <option>20:30</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-select" id="quick-guests" required>
+                                        <option value="">Personnes</option>
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        <option>6+</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="tel" class="form-control" placeholder="Téléphone" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn-gold btn w-100">
+                                        <i class="fas fa-check me-2"></i>Vérifier Disponibilité
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="text-center text-muted small mt-3 mb-0">
+                            <i class="fas fa-phone text-gold me-1"></i> 
+                            Ou appelez-nous : <strong>01 23 45 67 89</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Spécialités -->
+    <section class="py-5 bg-cream">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="section-title font-playfair display-5">Nos Spécialités Maison</h2>
+                <p class="lead text-muted max-w-3xl mx-auto">
+                    Découvrez nos plats signature élaborés par notre Chef étoilé avec des produits frais du marché
+                </p>
+            </div>
+            
+            <div class="row g-4" id="specialties-container">
+                <!-- Les plats seront chargés par JavaScript -->
+            </div>
+            
+            <div class="text-center mt-5">
+                <a href="menu.html" class="btn btn-outline-dark btn-lg px-5">
+                    Voir Tout le Menu <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section À Propos -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         class="img-fluid rounded-4 shadow-lg" 
+                         alt="Notre restaurant">
+                </div>
+                <div class="col-lg-6">
+                    <h6 class="text-gold fw-bold mb-3">NOTRE HISTOIRE</h6>
+                    <h2 class="font-playfair display-6 mb-4">
+                        Plus de 25 ans d'excellence culinaire
+                    </h2>
+                    <p class="lead mb-4">
+                        Fondé en 1995 par le Chef étoilé Philippe Moreau, Le Bistro Gourmand est devenu 
+                        une référence de la gastronomie française à Paris. Notre philosophie : 
+                        respecter les produits, innover tout en conservant les traditions.
+                    </p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-gold rounded-circle p-3 me-3">
+                                    <i class="fas fa-chef-hat text-white fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Chef Étoilé</h5>
+                                    <p class="text-muted mb-0">Guide Michelin</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-gold rounded-circle p-3 me-3">
+                                    <i class="fas fa-leaf text-white fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Produits Bio</h5>
+                                    <p class="text-muted mb-0">Producteurs locaux</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-gold rounded-circle p-3 me-3">
+                                    <i class="fas fa-wine-bottle text-white fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">500 Vins</h5>
+                                    <p class="text-muted mb-0">Cave sélectionnée</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-gold rounded-circle p-3 me-3">
+                                    <i class="fas fa-award text-white fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Prix d'Excellence</h5>
+                                    <p class="text-muted mb-0">2023 Food Award</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="about.html" class="btn-gold btn">
+                            En savoir plus <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Témoignages -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="section-title font-playfair display-5">Ce que disent nos clients</h2>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card rounded-4 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" 
+                                 class="rounded-circle me-3" 
+                                 width="60" 
+                                 alt="Client">
+                            <div>
+                                <h5 class="fw-bold mb-0">Marie Laurent</h5>
+                                <div class="text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">
+                            "Une expérience exceptionnelle ! Le canard à l'orange était divin. 
+                            Service impeccable et ambiance raffinée. Nous reviendrons !"
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="testimonial-card rounded-4 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" 
+                                 class="rounded-circle me-3" 
+                                 width="60" 
+                                 alt="Client">
+                            <div>
+                                <h5 class="fw-bold mb-0">Thomas Dubois</h5>
+                                <div class="text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">
+                            "Parfait pour un dîner d'affaires. La carte des vins est impressionnante 
+                            et le sommelier nous a conseillé à merveille."
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="testimonial-card rounded-4 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" 
+                                 class="rounded-circle me-3" 
+                                 width="60" 
+                                 alt="Client">
+                            <div>
+                                <h5 class="fw-bold mb-0">Sophie Martin</h5>
+                                <div class="text-gold">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mb-0">
+                            "Anniversaire de mariage inoubliable ! Le personnel a tout fait pour 
+                            que cette soirée soit magique. Merci !"
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Infos Pratiques -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="font-playfair display-6 mb-4">Horaires & Contact</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h4 class="fw-bold mb-3">
+                                <i class="fas fa-clock text-gold me-2"></i>Horaires
+                            </h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Lundi - Jeudi</span>
+                                    <span class="fw-bold">12h-14h30 / 19h-23h</span>
+                                </li>
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Vendredi</span>
+                                    <span class="fw-bold">12h-14h30 / 19h-minuit</span>
+                                </li>
+                                <li class="mb-2 d-flex justify-content-between">
+                                    <span>Samedi</span>
+                                    <span class="fw-bold">12h-15h / 19h-minuit</span>
+                                </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Dimanche</span>
+                                    <span class="fw-bold">12h-16h</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <h4 class="fw-bold mb-3">
+                                <i class="fas fa-map-marker-alt text-gold me-2"></i>Adresse
+                            </h4>
+                            <address class="mb-4">
+                                <strong>Le Bistro Gourmand</strong><br>
+                                123 Avenue des Champs-Élysées<br>
+                                75008 Paris, France<br>
+                                <i class="fas fa-phone me-1"></i> 01 23 45 67 89<br>
+                                <i class="fas fa-envelope me-1"></i> contact@bistrogourmand.fr
+                            </address>
+                            
+                            <div class="d-flex gap-3">
+                                <a href="#" class="btn btn-outline-dark">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-dark">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="btn btn-outline-dark">
+                                    <i class="fab fa-tripadvisor"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="bg-dark text-white rounded-4 p-4 h-100">
+                        <h4 class="font-playfair mb-4">
+                            <i class="fas fa-concierge-bell text-gold me-2"></i>Services
+                        </h4>
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="fas fa-check text-gold me-2"></i> Parking privé gratuit
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-check text-gold me-2"></i> Terrasse chauffée
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-check text-gold me-2"></i> Salle privée (jusqu'à 50 pers.)
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-check text-gold me-2"></i> Menu végétarien
+                            </li>
+                            <li class="mb-3">
+                                <i class="fas fa-check text-gold me-2"></i> Accessible PMR
+                            </li>
+                            <li>
+                                <i class="fas fa-check text-gold me-2"></i> Carte des vins dégustation
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-4">
+                            <a href="contact.html" class="btn-gold btn w-100">
+                                <i class="fas fa-info-circle me-2"></i>Plus d'informations
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="font-playfair mb-3">
+                        <i class="fas fa-utensils text-gold me-2"></i>Le Bistro Gourmand
+                    </h3>
+                    <p class="text-white-50 mb-4">
+                        Excellence culinaire depuis 1995. Découvrez l'art de la gastronomie 
+                        française dans un cadre élégant et chaleureux.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-tripadvisor"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-google"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Navigation</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none">Accueil</a></li>
+                        <li class="mb-2"><a href="menu.html" class="text-white-50 text-decoration-none">Menu</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none">À Propos</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+                        <li><a href="reservation.html" class="text-white-50 text-decoration-none">Réservation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Informations Légales</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Mentions Légales</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Politique de confidentialité</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Conditions d'utilisation</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Cookies</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="mb-3">Newsletter</h5>
+                    <p class="text-white-50 small mb-3">
+                        Inscrivez-vous pour recevoir nos offres spéciales et actualités
+                    </p>
+                    <form id="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Votre email" required>
+                            <button class="btn btn-gold" type="submit">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <p class="text-white-50 small mb-0">
+                        <i class="fas fa-phone text-gold me-1"></i> 01 23 45 67 89<br>
+                        <i class="fas fa-envelope text-gold me-1"></i> contact@bistrogourmand.fr
+                    </p>
+                </div>
+            </div>
+            
+            <hr class="text-white-50 my-4">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-white-50 small mb-0">
+                        © 2024 Le Bistro Gourmand. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-white-50 small mb-0">
+                        Site créé avec <i class="fas fa-heart text-danger"></i> pour démo portfolio
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bouton Chatbot (TOUJOURS VISIBLE) -->
+    <button class="chatbot-toggle-btn" id="chatbot-toggle" title="Assistant virtuel">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript Personnalisé -->
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+    
+    <!-- Chatbot en DERNIER pour ne pas interférer -->
+    <script src="js/chatbot.js"></script>
+    
+    <script>
+        // TES FONCTIONS EXISTANTES
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSpecialties();
+            updateCartCount();
+            
+            // Formulaire newsletter
+            document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Merci pour votre inscription à notre newsletter !');
+                this.reset();
+            });
+            
+            // Formulaire réservation rapide
+            document.getElementById('quick-reservation').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Disponibilité vérifiée ! Nous vous confirmons par téléphone dans les 30 minutes.');
+                this.reset();
+            });
+        });
+        
+        function loadSpecialties() {
+            const specialties = [
+                {
+                    id: 1,
+                    name: "Bœuf Bourguignon",
+                    description: "Bœuf mijoté au vin rouge de Bourgogne, carottes, oignons, champignons",
+                    price: 24,
+                    category: "plats",
+                    image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 2,
+                    name: "Magret de Canard",
+                    description: "Magret de canard grillé, sauce aux fruits rouges, purée maison",
+                    price: 28,
+                    category: "plats",
+                    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                },
+                {
+                    id: 3,
+                    name: "Tarte Tatin",
+                    description: "Tarte aux pommes caramélisées, glace vanille maison",
+                    price: 12,
+                    category: "desserts",
+                    image: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                }
+            ];
+            
+            const container = document.getElementById('specialties-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            specialties.forEach(item => {
+                const card = `
+                    <div class="col-md-4">
+                        <div class="dish-card card border-0 shadow-sm h-100">
+                            <div class="position-relative">
+                                <img src="${item.image}" class="card-img-top" alt="${item.name}" style="height: 200px; object-fit: cover;">
+                                <span class="position-absolute top-0 end-0 bg-gold text-white px-3 py-1 m-3 rounded-pill">
+                                    ${item.price}€
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title font-playfair">${item.name}</h5>
+                                <p class="card-text text-muted">${item.description}</p>
+                            </div>
+                            <div class="card-footer bg-transparent border-top-0">
+                                <button class="btn-gold btn w-100 add-to-cart" 
+                                        data-id="${item.id}"
+                                        data-name="${item.name}"
+                                        data-price="${item.price}">
+                                    <i class="fas fa-cart-plus me-2"></i>Ajouter au panier
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+            
+            // Ajouter événements aux boutons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const item = {
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        price: parseFloat(this.dataset.price),
+                        quantity: 1
+                    };
+                    addToCart(item);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

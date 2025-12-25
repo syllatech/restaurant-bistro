@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À Propos | Le Bistro Gourmand</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gold': '#D4AF37',
+                        'burgundy': '#800020',
+                        'cream': '#FFF8E7'
+                    },
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                        'opensans': ['Open Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS Personnalisé -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .about-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #D4AF37;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -38px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #D4AF37;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #D4AF37;
+        }
+        
+        .team-card {
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-img {
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-card:hover .team-img {
+            transform: scale(1.05);
+        }
+        
+        .value-card {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 250px;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        
+        .award-badge {
+            background: linear-gradient(45deg, #D4AF37, #F4CA16);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="font-opensans">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-lg py-3">
+        <div class="container">
+            <a class="navbar-brand font-playfair fs-3" href="index.html">
+                <i class="fas fa-utensils text-gold me-2"></i>
+                Le Bistro Gourmand
+            </a>
+            
+            <button class="navbar-toggler border-gold" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="about.html">À Propos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-gold ms-lg-3 mt-2 mt-lg-0" href="reservation.html">
+                            <i class="fas fa-calendar-check me-2"></i>Réserver
+                        </a>
+                    </li>
+                    
+                    <!-- Panier Desktop -->
+                    <li class="nav-item ms-lg-3 position-relative d-none d-lg-block">
+                        <a href="#" class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                            <i class="fas fa-shopping-cart fs-5"></i>
+                            <span class="cart-badge">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="about-hero text-white py-5 d-flex align-items-center min-vh-100 pt-5">
+        <div class="container pt-5">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h6 class="text-gold fw-bold mb-3">NOTRE HISTOIRE</h6>
+                    <h1 class="display-2 fw-bold font-playfair mb-4">
+                        Excellence Culinaire <span class="text-gold">Depuis 1995</span>
+                    </h1>
+                    <p class="lead fs-4 mb-5 opacity-90">
+                        Une tradition familiale de passion, d'authenticité et d'innovation 
+                        au cœur de la gastronomie française.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notre Histoire -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1554679665-f5537f187268?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                             class="img-fluid rounded-4 shadow-lg" 
+                             alt="Notre histoire">
+                        <div class="position-absolute bottom-0 start-0 bg-white p-4 rounded-4 shadow m-4">
+                            <h3 class="font-playfair h2 mb-0">25+</h3>
+                            <p class="mb-0 text-muted">Ans d'expérience</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <h6 class="text-gold fw-bold mb-3">UNE PASSION FAMILIALE</h6>
+                    <h2 class="font-playfair display-5 mb-4">L'Art de Recevoir</h2>
+                    
+                    <p class="lead mb-4">
+                        Fondé en 1995 par le Chef Philippe Moreau, Le Bistro Gourmand 
+                        est né d'une simple idée : partager l'amour de la cuisine française 
+                        authentique dans un cadre chaleureux et élégant.
+                    </p>
+                    
+                    <p class="mb-4">
+                        Ce qui a commencé comme un petit restaurant de quartier est rapidement 
+                        devenu une référence gastronomique à Paris. Aujourd'hui dirigé par 
+                        son fils, le Chef étoilé Antoine Moreau, nous perpétuons la tradition 
+                        tout en innovant constamment.
+                    </p>
+                    
+                    <div class="timeline mt-5">
+                        <div class="timeline-item">
+                            <h5 class="fw-bold">1995</h5>
+                            <p>Ouverture du premier restaurant dans le 6ème arrondissement</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5 class="fw-bold">2005</h5>
+                            <p>Première étoile au Guide Michelin</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5 class="fw-bold">2015</h5>
+                            <p>Rénovation et agrandissement des locaux</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5 class="fw-bold">2023</h5>
+                            <p>Prix d'Excellence de la Gastronomie Française</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nos Valeurs -->
+    <section class="py-5 bg-cream">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="font-playfair display-5 mb-3">Nos Valeurs Fondamentales</h2>
+                <p class="lead text-muted max-w-3xl mx-auto">
+                    L'excellence dans chaque détail, la passion dans chaque assiette
+                </p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="value-card bg-white p-4 shadow-sm">
+                        <div class="value-icon">
+                            <i class="fas fa-leaf fs-3 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair text-center mb-3">Produits Frais</h4>
+                        <p class="text-center text-muted">
+                            Nous travaillons exclusivement avec des producteurs locaux 
+                            et des produits de saison, garantissant fraîcheur et qualité.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="value-card bg-white p-4 shadow-sm">
+                        <div class="value-icon">
+                            <i class="fas fa-handshake fs-3 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair text-center mb-3">Savoir-Faire Artisanal</h4>
+                        <p class="text-center text-muted">
+                            Chaque plat est préparé à la main par nos chefs, 
+                            respectant les techniques traditionnelles françaises.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="value-card bg-white p-4 shadow-sm">
+                        <div class="value-icon">
+                            <i class="fas fa-heart fs-3 text-gold"></i>
+                        </div>
+                        <h4 class="font-playfair text-center mb-3">Passion & Innovation</h4>
+                        <p class="text-center text-muted">
+                            Nous réinventons constamment notre carte pour surprendre 
+                            et ravir nos clients, tout en respectant les classiques.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notre Équipe -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="font-playfair display-5 mb-3">Rencontrez Notre Équipe</h2>
+                <p class="lead text-muted max-w-3xl mx-auto">
+                    Des professionnels passionnés dévoués à votre expérience culinaire
+                </p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="team-card bg-white rounded-4 shadow-sm overflow-hidden">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                                 class="team-img w-100" 
+                                 alt="Chef Antoine Moreau">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="award-badge">Chef Étoilé</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-playfair mb-1">Antoine Moreau</h4>
+                            <p class="text-gold fw-bold mb-3">Chef Cuisinier & Propriétaire</p>
+                            <p class="text-muted small">
+                                Formé aux meilleures écoles de cuisine française, 
+                                Antoine a travaillé dans des restaurants 3 étoiles 
+                                avant de reprendre l'affaire familiale.
+                            </p>
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="text-dark"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="team-card bg-white rounded-4 shadow-sm overflow-hidden">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                                 class="team-img w-100" 
+                                 alt="Sofia Dubois">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-playfair mb-1">Sofia Dubois</h4>
+                            <p class="text-gold fw-bold mb-3">Directrice de Salle</p>
+                            <p class="text-muted small">
+                                Avec 15 ans d'expérience dans l'hôtellerie de luxe, 
+                                Sofia veille à ce que chaque client vive une expérience 
+                                inoubliable.
+                            </p>
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="#" class="text-dark"><i class="fab fa-linkedin"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="team-card bg-white rounded-4 shadow-sm overflow-hidden">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1595475038784-bbe439ff41e6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                                 class="team-img w-100" 
+                                 alt="Marc Lefèvre">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-playfair mb-1">Marc Lefèvre</h4>
+                            <p class="text-gold fw-bold mb-3">Sommelier</p>
+                            <p class="text-muted small">
+                                Diplômé de l'École du Vin de Bordeaux, Marc a construit 
+                                une cave exceptionnelle de plus de 500 références.
+                            </p>
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="text-dark"><i class="fas fa-wine-bottle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Récompenses -->
+    <section class="py-5 bg-dark text-white">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="font-playfair display-5 mb-3">Nos Récompenses</h2>
+                <p class="lead opacity-90 max-w-3xl mx-auto">
+                    Reconnaissance de notre engagement pour l'excellence culinaire
+                </p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="text-center">
+                        <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-star fs-3"></i>
+                        </div>
+                        <h4 class="h5 mb-2">Guide Michelin</h4>
+                        <p class="small opacity-90">Étoile 2005-2024</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="text-center">
+                        <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-award fs-3"></i>
+                        </div>
+                        <h4 class="h5 mb-2">Food Award</h4>
+                        <p class="small opacity-90">Meilleur restaurant 2023</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="text-center">
+                        <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-wine-bottle fs-3"></i>
+                        </div>
+                        <h4 class="h5 mb-2">Wine Spectator</h4>
+                        <p class="small opacity-90">Award d'Excellence 2022</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-6 mb-4">
+                    <div class="text-center">
+                        <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                             style="width: 80px; height: 80px;">
+                            <i class="fas fa-leaf fs-3"></i>
+                        </div>
+                        <h4 class="h5 mb-2">Green Restaurant</h4>
+                        <p class="small opacity-90">Certification 2021</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galerie -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="font-playfair display-5 mb-3">Notre Univers</h2>
+                <p class="lead text-muted max-w-3xl mx-auto">
+                    Découvrez l'ambiance et les coulisses du Bistro Gourmand
+                </p>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Salle principale">
+                        <div class="gallery-overlay">
+                            <h5 class="text-white">Salle Principale</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Cuisine">
+                        <div class="gallery-overlay">
+                            <h5 class="text-white">Notre Cuisine</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Terrasse">
+                        <div class="gallery-overlay">
+                            <h5 class="text-white">Terrasse</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1559314809-2b99056a8c4a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Cave à vin">
+                        <div class="gallery-overlay">
+                            <h5 class="text-white">Cave à Vin</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-5 bg-gold text-white text-center">
+        <div class="container py-5">
+            <h2 class="display-5 font-playfair mb-4">Prêt à vivre l'expérience ?</h2>
+            <p class="lead mb-5 max-w-2xl mx-auto">
+                Réservez votre table et laissez-nous vous faire découvrir 
+                l'authentique gastronomie française
+            </p>
+            <a href="reservation.html" class="btn btn-dark btn-lg px-5">
+                <i class="fas fa-calendar-alt me-2"></i>Réserver maintenant
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="font-playfair mb-3">
+                        <i class="fas fa-utensils text-gold me-2"></i>Le Bistro Gourmand
+                    </h3>
+                    <p class="text-white-50 mb-4">
+                        Excellence culinaire depuis 1995. Découvrez l'art de la gastronomie 
+                        française dans un cadre élégant et chaleureux.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white fs-5"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white fs-5"><i class="fab fa-tripadvisor"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Contact</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-map-marker-alt text-gold me-2"></i>
+                            123 Avenue des Champs-Élysées, 75008 Paris
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-phone text-gold me-2"></i>
+                            01 23 45 67 89
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope text-gold me-2"></i>
+                            contact@bistrogourmand.fr
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="mb-3">Horaires</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">Lun-Jeu: 12h-14h30 / 19h-23h</li>
+                        <li class="mb-2">Vendredi: 12h-14h30 / 19h-minuit</li>
+                        <li class="mb-2">Samedi: 12h-15h / 19h-minuit</li>
+                        <li>Dimanche: 12h-16h</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="text-white-50 my-4">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-white-50 small mb-0">
+                        © 2024 Le Bistro Gourmand. Tous droits réservés.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-white-50 small mb-0">
+                        <a href="index.html" class="text-white-50 text-decoration-none me-3">Accueil</a>
+                        <a href="menu.html" class="text-white-50 text-decoration-none me-3">Menu</a>
+                        <a href="about.html" class="text-white-50 text-decoration-none me-3">À Propos</a>
+                        <a href="contact.html" class="text-white-50 text-decoration-none">Contact</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript Personnalisé -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier si admin connecté
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                const adminLink = document.createElement('li');
+                adminLink.className = 'nav-item ms-lg-3';
+                adminLink.innerHTML = `
+                    <a class="nav-link text-warning" href="admin-dashboard.html">
+                        <i class="fas fa-user-cog me-1"></i>Admin
+                    </a>
+                `;
+                document.querySelector('.navbar-nav').appendChild(adminLink);
+            }
+        });
+    </script>
+    <!-- Dans tous les fichiers HTML, ajoute ceci avant </body> -->
+<script src="js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Le Bistro Gourmand</title>
+    
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS Admin -->
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 70px;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #D4AF37;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            margin-right: 10px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s ease;
+        }
+        
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+        
+        /* Content */
+        .content {
+            padding: 30px;
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        /* Cards */
+        .stat-card {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+            
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
+        
+        /* Notifications */
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Modal */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        /* Colors */
+        .bg-primary-light { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+        .bg-success-light { background: rgba(25, 135, 84, 0.1); color: #198754; }
+        .bg-warning-light { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+        .bg-danger-light { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+        .bg-info-light { background: rgba(13, 202, 240, 0.1); color: #0dcaf0; }
+        
+        .btn-gold {
+            background: linear-gradient(45deg, #D4AF37, #F4CA16);
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-gold:hover {
+            background: linear-gradient(45deg, #C19B2C, #E3B915);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4 class="mb-0">
+                <i class="fas fa-utensils text-gold me-2"></i>
+                <span class="d-none d-md-inline">Bistro Admin</span>
+            </h4>
+            <p class="small text-white-50 mb-0 mt-1 d-none d-md-block">
+                Dashboard Administratif
+            </p>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span class="d-none d-md-inline">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#reservations" data-section="reservations">
+                        <i class="fas fa-calendar-check"></i>
+                        <span class="d-none d-md-inline">Réservations</span>
+                        <span class="notification-badge d-none" id="reservation-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#menu" data-section="menu">
+                        <i class="fas fa-utensils"></i>
+                        <span class="d-none d-md-inline">Menu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#messages" data-section="messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="d-none d-md-inline">Messages</span>
+                        <span class="notification-badge d-none" id="message-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#orders" data-section="orders">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="d-none d-md-inline">Commandes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#analytics" data-section="analytics">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="d-none d-md-inline">Analytics</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#settings" data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span class="d-none d-md-inline">Paramètres</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="px-3 mt-5">
+                <div class="bg-dark rounded p-3">
+                    <p class="small text-white-50 mb-1">Connecté en tant que</p>
+                    <p class="mb-0 fw-bold" id="admin-name">Administrateur</p>
+                    <button class="btn btn-sm btn-outline-light w-100 mt-3" id="logout-btn">
+                        <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="header d-flex align-items-center px-4">
+            <button class="btn btn-outline-secondary d-md-none me-3" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <h5 class="mb-0 d-none d-md-block" id="page-title">Dashboard</h5>
+            
+            <div class="ms-auto d-flex align-items-center">
+                <!-- Notifications -->
+                <div class="dropdown me-3">
+                    <button class="btn btn-light position-relative" type="button" id="notificationsDropdown" data-bs-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">0</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 300px;">
+                        <div class="p-3 border-bottom">
+                            <h6 class="mb-0">Notifications</h6>
+                        </div>
+                        <div id="notifications-list" style="max-height: 300px; overflow-y: auto;">
+                            <!-- Notifications dynamiques -->
+                        </div>
+                        <div class="p-2 border-top">
+                            <a href="#" class="btn btn-sm btn-outline-secondary w-100" id="mark-all-read">
+                                Tout marquer comme lu
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Info -->
+                <div class="dropdown">
+                    <button class="btn btn-light d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                        <div class="bg-gold rounded-circle d-flex align-items-center justify-content-center me-2" 
+                             style="width: 35px; height: 35px;">
+                            <i class="fas fa-user text-white"></i>
+                        </div>
+                        <span class="d-none d-md-inline" id="header-admin-name">Admin</span>
+                        <i class="fas fa-chevron-down ms-2"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#profile" data-section="profile">
+                            <i class="fas fa-user me-2"></i>Mon Profil
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logout-header">
+                            <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Sections -->
+        <div class="content">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="content-section">
+                <h2 class="h4 mb-4">Tableau de Bord</h2>
+                
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Réservations Aujourd'hui</h6>
+                                        <h3 class="mb-0" id="today-reservations">0</h3>
+                                    </div>
+                                    <div class="stat-icon bg-primary-light">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                </div>
+                                <p class="small text-success mb-0 mt-2">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    <span id="reservation-change">0%</span> vs hier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Commandes En Cours</h6>
+                                        <h3 class="mb-0" id="pending-orders">0</h3>
+                                    </div>
+                                    <div class="stat-icon bg-warning-light">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                </div>
+                                <p class="small text-success mb-0 mt-2">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    <span id="order-change">0%</span> vs hier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Revenu Aujourd'hui</h6>
+                                        <h3 class="mb-0" id="today-revenue">0€</h3>
+                                    </div>
+                                    <div class="stat-icon bg-success-light">
+                                        <i class="fas fa-euro-sign"></i>
+                                    </div>
+                                </div>
+                                <p class="small text-success mb-0 mt-2">
+                                    <i class="fas fa-arrow-up me-1"></i>
+                                    <span id="revenue-change">0%</span> vs hier
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-6">
+                        <div class="stat-card card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Messages Non Lus</h6>
+                                        <h3 class="mb-0" id="unread-messages">0</h3>
+                                    </div>
+                                    <div class="stat-icon bg-danger-light">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                </div>
+                                <p class="small text-danger mb-0 mt-2">
+                                    <i class="fas fa-arrow-down me-1"></i>
+                                    Nécessite attention
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Row -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="chart-container">
+                            <h5 class="mb-3">Réservations (7 derniers jours)</h5>
+                            <canvas id="reservationsChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="chart-container">
+                            <h5 class="mb-3">Statut des Réservations</h5>
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-container">
+                            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Activité Récente</h5>
+                                <button class="btn btn-sm btn-outline-secondary" id="refresh-activity">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Heure</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                            <th>Statut</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="activity-table">
+                                        <!-- Rempli par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reservations Section -->
+            <section id="reservations-section" class="content-section d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0">Gestion des Réservations</h2>
+                    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addReservationModal">
+                        <i class="fas fa-plus me-2"></i>Nouvelle Réservation
+                    </button>
+                </div>
+                
+                <!-- Filters -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" id="filter-date">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filter-status">
+                            <option value="">Tous les statuts</option>
+                            <option value="confirmed">Confirmé</option>
+                            <option value="pending">En attente</option>
+                            <option value="cancelled">Annulé</option>
+                            <option value="completed">Terminé</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Rechercher par nom..." id="filter-search">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-secondary w-100" id="reset-filters">
+                            <i class="fas fa-times me-2"></i>Réinitialiser
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Reservations Table -->
+                <div class="table-container">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Date</th>
+                                    <th>Heure</th>
+                                    <th>Personnes</th>
+                                    <th>Statut</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservations-table">
+                                <!-- Rempli par JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Menu Section -->
+            <section id="menu-section" class="content-section d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h4 mb-0">Gestion du Menu</h2>
+                    <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#addMenuItemModal">
+                        <i class="fas fa-plus me-2"></i>Ajouter un plat
+                    </button>
+                </div>
+                
+                <!-- Menu Items -->
+                <div class="row" id="menu-items-container">
+                    <!-- Rempli par JavaScript -->
+                </div>
+            </section>
+            
+            <!-- Messages Section -->
+            <section id="messages-section" class="content-section d-none">
+                <h2 class="h4 mb-4">Messages des Clients</h2>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <!-- Liste des messages -->
+                        <div class="table-container" style="height: 600px; overflow-y: auto;">
+                            <div class="list-group list-group-flush" id="messages-list">
+                                <!-- Messages dynamiques -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <!-- Détails du message -->
+                        <div class="table-container" id="message-details" style="display: none;">
+                            <div class="p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-4">
+                                    <div>
+                                        <h5 id="message-subject"></h5>
+                                        <p class="text-muted mb-0" id="message-from"></p>
+                                    </div>
+                                    <span class="badge bg-secondary" id="message-date"></span>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <p id="message-content"></p>
+                                </div>
+                                
+                                <div class="border-top pt-3">
+                                    <textarea class="form-control mb-3" rows="3" placeholder="Votre réponse..."></textarea>
+                                    <button class="btn btn-gold">
+                                        <i class="fas fa-reply me-2"></i>Répondre
+                                    </button>
+                                    <button class="btn btn-outline-secondary ms-2" id="mark-read-btn">
+                                        <i class="fas fa-check me-2"></i>Marquer comme lu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Aucun message sélectionné -->
+                        <div class="text-center py-5" id="no-message-selected">
+                            <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                            <h5>Sélectionnez un message</h5>
+                            <p class="text-muted">Choisissez un message dans la liste pour voir son contenu</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Orders Section -->
+            <section id="orders-section" class="content-section d-none">
+                <h2 class="h4 mb-4">Commandes en Ligne</h2>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Commande</th>
+                                            <th>Client</th>
+                                            <th>Montant</th>
+                                            <th>Statut</th>
+                                            <th>Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-table">
+                                        <!-- Rempli par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="chart-container mb-4">
+                            <h5 class="mb-3">Statut des Commandes</h5>
+                            <canvas id="ordersChart"></canvas>
+                        </div>
+                        
+                        <div class="table-container">
+                            <h5 class="p-3 border-bottom mb-0">Plats Populaires</h5>
+                            <div class="p-3" id="popular-items">
+                                <!-- Rempli par JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="content-section d-none">
+                <h2 class="h4 mb-4">Analytics</h2>
+                
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="mb-3">Visiteurs (30 jours)</h5>
+                            <canvas id="visitorsChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="mb-3">Heures d'affluence</h5>
+                            <canvas id="peakHoursChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-container">
+                            <h5 class="p-3 border-bottom mb-0">Rapport Mensuel</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mois</th>
+                                            <th>Réservations</th>
+                                            <th>Commandes</th>
+                                            <th>Revenu</th>
+                                            <th>Taux d'occupation</th>
+                                            <th>Valeur moyenne</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="monthly-report">
+                                        <!-- Rempli par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section id="settings-section" class="content-section d-none">
+                <h2 class="h4 mb-4">Paramètres</h2>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="table-container">
+                            <div class="nav flex-column nav-pills" id="settings-tab" role="tablist">
+                                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#general-settings">
+                                    <i class="fas fa-cog me-2"></i>Général
+                                </button>
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#restaurant-info">
+                                    <i class="fas fa-store me-2"></i>Informations Restaurant
+                                </button>
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#hours-settings">
+                                    <i class="fas fa-clock me-2"></i>Horaires
+                                </button>
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#admin-users">
+                                    <i class="fas fa-users me-2"></i>Utilisateurs Admin
+                                </button>
+                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#backup-settings">
+                                    <i class="fas fa-database me-2"></i>Sauvegarde
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="tab-content">
+                            <!-- General Settings -->
+                            <div class="tab-pane fade show active" id="general-settings">
+                                <div class="table-container p-4">
+                                    <h5 class="mb-4">Paramètres Généraux</h5>
+                                    <form id="general-settings-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nom du Restaurant</label>
+                                            <input type="text" class="form-control" id="restaurant-name" value="Le Bistro Gourmand">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Devise</label>
+                                            <select class="form-select" id="currency">
+                                                <option value="EUR" selected>Euro (€)</option>
+                                                <option value="USD">Dollar ($)</option>
+                                                <option value="GBP">Livre (£)</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Fuseau Horaire</label>
+                                            <select class="form-select" id="timezone">
+                                                <option value="Europe/Paris" selected>Europe/Paris</option>
+                                                <option value="UTC">UTC</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="maintenance-mode">
+                                            <label class="form-check-label" for="maintenance-mode">
+                                                Mode Maintenance (le site sera inaccessible aux clients)
+                                            </label>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-gold">
+                                            <i class="fas fa-save me-2"></i>Enregistrer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Restaurant Info -->
+                            <div class="tab-pane fade" id="restaurant-info">
+                                <div class="table-container p-4">
+                                    <h5 class="mb-4">Informations du Restaurant</h5>
+                                    <form id="restaurant-info-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">Adresse</label>
+                                            <input type="text" class="form-control" id="restaurant-address" 
+                                                   value="123 Avenue des Champs-Élysées, 75008 Paris">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Téléphone</label>
+                                            <input type="tel" class="form-control" id="restaurant-phone" 
+                                                   value="01 23 45 67 89">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="restaurant-email" 
+                                                   value="contact@bistrogourmand.fr">
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" id="restaurant-description" rows="4">
+Excellence culinaire depuis 1995. Découvrez l'art de la gastronomie française dans un cadre élégant et chaleureux.
+                                            </textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-gold">
+                                            <i class="fas fa-save me-2"></i>Enregistrer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Hours Settings -->
+                            <div class="tab-pane fade" id="hours-settings">
+                                <div class="table-container p-4">
+                                    <h5 class="mb-4">Horaires d'Ouverture</h5>
+                                    <form id="hours-form">
+                                        <!-- Les horaires seront générés par JavaScript -->
+                                        <div id="hours-container"></div>
+                                        <button type="submit" class="btn btn-gold mt-3">
+                                            <i class="fas fa-save me-2"></i>Enregistrer les horaires
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <!-- Admin Users -->
+                            <div class="tab-pane fade" id="admin-users">
+                                <div class="table-container p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h5 class="mb-0">Utilisateurs Administrateurs</h5>
+                                        <button class="btn btn-sm btn-gold" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                                            <i class="fas fa-plus me-2"></i>Ajouter un admin
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <th>Email</th>
+                                                    <th>Rôle</th>
+                                                    <th>Dernière connexion</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="admin-users-table">
+                                                <!-- Rempli par JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Backup Settings -->
+                            <div class="tab-pane fade" id="backup-settings">
+                                <div class="table-container p-4">
+                                    <h5 class="mb-4">Sauvegarde et Restauration</h5>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Sauvegarde des données</h6>
+                                        <p class="text-muted small mb-3">
+                                            Téléchargez une copie de toutes les données du système.
+                                        </p>
+                                        <button class="btn btn-outline-primary" id="backup-data">
+                                            <i class="fas fa-download me-2"></i>Télécharger la sauvegarde
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Restauration</h6>
+                                        <p class="text-muted small mb-3">
+                                            Restaurez les données à partir d'un fichier de sauvegarde.
+                                        </p>
+                                        <div class="input-group">
+                                            <input type="file" class="form-control" id="backup-file" accept=".json">
+                                            <button class="btn btn-outline-warning" id="restore-data">
+                                                <i class="fas fa-upload me-2"></i>Restaurer
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        La restauration écrasera toutes les données actuelles. Faites une sauvegarde avant.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Profile Section -->
+            <section id="profile-section" class="content-section d-none">
+                <h2 class="h4 mb-4">Mon Profil</h2>
+                
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="table-container p-4 text-center">
+                            <div class="mb-3">
+                                <div class="bg-gold rounded-circle d-inline-flex align-items-center justify-content-center" 
+                                     style="width: 120px; height: 120px;">
+                                    <i class="fas fa-user fa-3x text-white"></i>
+                                </div>
+                            </div>
+                            <h5 id="profile-name">Administrateur</h5>
+                            <p class="text-muted small" id="profile-role">Super Administrateur</p>
+                            
+                            <div class="mt-4">
+                                <button class="btn btn-outline-secondary btn-sm" id="change-photo">
+                                    <i class="fas fa-camera me-2"></i>Changer la photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-8">
+                        <div class="table-container p-4">
+                            <h5 class="mb-4">Informations Personnelles</h5>
+                            <form id="profile-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nom complet</label>
+                                        <input type="text" class="form-control" id="profile-fullname" 
+                                               value="Administrateur">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="profile-email" 
+                                               value="admin@bistrogourmand.fr">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Nom d'utilisateur</label>
+                                    <input type="text" class="form-control" id="profile-username" 
+                                           value="admin" readonly>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <h6 class="mb-3">Changer le mot de passe</h6>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Mot de passe actuel</label>
+                                        <input type="password" class="form-control" id="current-password">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Nouveau mot de passe</label>
+                                        <input type="password" class="form-control" id="new-password">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Confirmer</label>
+                                        <input type="password" class="form-control" id="confirm-password">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-gold">
+                                    <i class="fas fa-save me-2"></i>Mettre à jour le profil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Add Reservation Modal -->
+    <div class="modal fade" id="addReservationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle Réservation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-reservation-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nom *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Prénom *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email *</label>
+                                <input type="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Téléphone *</label>
+                                <input type="tel" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Date *</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Heure *</label>
+                                <select class="form-select" required>
+                                    <option value="">Choisir</option>
+                                    <option>12:00</option>
+                                    <option>12:30</option>
+                                    <option>13:00</option>
+                                    <option>19:00</option>
+                                    <option>19:30</option>
+                                    <option>20:00</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Personnes *</label>
+                                <select class="form-select" required>
+                                    <option value="1">1</option>
+                                    <option value="2" selected>2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Demandes spéciales</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Statut</label>
+                            <select class="form-select">
+                                <option value="confirmed">Confirmé</option>
+                                <option value="pending">En attente</option>
+                                <option value="cancelled">Annulé</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-gold">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Menu Item Modal -->
+    <div class="modal fade" id="addMenuItemModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un plat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-menu-item-form">
+                        <div class="mb-3">
+                            <label class="form-label">Nom du plat *</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Description *</label>
+                            <textarea class="form-control" rows="3" required></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Prix * (€)</label>
+                                <input type="number" class="form-control" step="0.01" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Catégorie *</label>
+                                <select class="form-select" required>
+                                    <option value="">Choisir</option>
+                                    <option value="entrees">Entrées</option>
+                                    <option value="plats">Plats Principaux</option>
+                                    <option value="desserts">Desserts</option>
+                                    <option value="boissons">Boissons</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" accept="image/*">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-secondary">Végétarien</span>
+                                <span class="badge bg-secondary">Épicé</span>
+                                <span class="badge bg-secondary">Nouveau</span>
+                                <span class="badge bg-secondary">Populaire</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-gold">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Admin Modal -->
+    <div class="modal fade" id="addAdminModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un Administrateur</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-admin-form">
+                        <div class="mb-3">
+                            <label class="form-label">Nom complet *</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nom d'utilisateur *</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Mot de passe *</label>
+                            <input type="password" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Rôle *</label>
+                            <select class="form-select" required>
+                                <option value="admin">Administrateur</option>
+                                <option value="manager">Manager</option>
+                                <option value="staff">Staff</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-gold">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JavaScript Admin -->
+    <script src="js/admin.js"></script>
+    
+    <script>
+        // Initialiser le dashboard admin
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérifier l'authentification
+            checkAdminAuth();
+            
+            // Initialiser les composants
+            initDashboard();
+            initNavigation();
+            initCharts();
+            loadDashboardData();
+            loadNotifications();
+            
+            // Gestionnaire de déconnexion
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            document.getElementById('logout-header').addEventListener('click', logout);
+            
+            // Rafraîchir les données toutes les 30 secondes
+            setInterval(loadDashboardData, 30000);
+        });
+        
+        function checkAdminAuth() {
+            const session = JSON.parse(localStorage.getItem('adminSession') || 'null');
+            if (!session || !session.loggedIn) {
+                window.location.href = 'admin-login.html';
+            } else {
+                // Afficher le nom de l'admin
+                document.getElementById('admin-name').textContent = session.name;
+                document.getElementById('header-admin-name').textContent = session.name;
+                document.getElementById('profile-name').textContent = session.name;
+                document.getElementById('profile-role').textContent = 
+                    session.role === 'superadmin' ? 'Super Administrateur' : 
+                    session.role === 'admin' ? 'Administrateur' : 'Staff';
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminSession');
+            localStorage.removeItem('adminRemember');
+            window.location.href = 'admin-login.html';
+        }
+        
+        function initDashboard() {
+            // Code d'initialisation du dashboard
+            console.log('Dashboard initialisé');
+        }
+        
+        function initNavigation() {
+            // Gestion de la sidebar mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    sidebarOverlay.classList.toggle('show');
+                });
+            }
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('show');
+                    this.classList.remove('show');
+                });
+            }
+            
+            // Navigation entre les sections
+            document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    
+                    // Mettre à jour l'active state
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mettre à jour le titre de la page
+                    const pageTitle = this.querySelector('span').textContent;
+                    document.getElementById('page-title').textContent = pageTitle;
+                    
+                    // Afficher la section correspondante
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.add('d-none'));
+                    document.getElementById(section + '-section').classList.remove('d-none');
+                    
+                    // Fermer la sidebar sur mobile
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('show');
+                        sidebarOverlay.classList.remove('show');
+                    }
+                    
+                    // Charger les données de la section si nécessaire
+                    if (section === 'reservations') {
+                        loadReservations();
+                    } else if (section === 'menu') {
+                        loadMenuItems();
+                    } else if (section === 'messages') {
+                        loadMessages();
+                    } else if (section === 'orders') {
+                        loadOrders();
+                    } else if (section === 'profile') {
+                        loadProfile();
+                    }
+                });
+            });
+            
+            // Navigation par URL hash
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                const link = document.querySelector(`.nav-link[data-section="${hash}"]`);
+                if (link) {
+                    link.click();
+                }
+            }
+        }
+        
+        function loadDashboardData() {
+            // Cette fonction chargerait les données depuis le localStorage ou une API
+            // Pour l'instant, nous utilisons des données simulées
+            
+            // Statistiques
+            document.getElementById('today-reservations').textContent = '12';
+            document.getElementById('pending-orders').textContent = '5';
+            document.getElementById('today-revenue').textContent = '850€';
+            document.getElementById('unread-messages').textContent = '3';
+            
+            // Notifications
+            updateNotificationCount();
+            
+            // Activité récente
+            loadRecentActivity();
+        }
+        
+        function loadNotifications() {
+            // Charger les notifications depuis localStorage
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            const container = document.getElementById('notifications-list');
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            // Mettre à jour le badge
+            document.getElementById('notification-count').textContent = unreadCount;
+            document.getElementById('notification-count').style.display = unreadCount > 0 ? 'flex' : 'none';
+            
+            // Afficher les notifications
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="p-3 text-center text-muted">
+                        <i class="fas fa-bell-slash fa-2x mb-2"></i>
+                        <p class="mb-0">Aucune notification</p>
+                    </div>
+                `;
+            } else {
+                let html = '';
+                notifications.slice(0, 5).forEach(notification => {
+                    const timeAgo = getTimeAgo(new Date(notification.timestamp));
+                    html += `
+                        <a href="#" class="dropdown-item ${!notification.read ? 'bg-light' : ''} p-3 border-bottom">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <p class="mb-1">${notification.message}</p>
+                                    <small class="text-muted">${timeAgo}</small>
+                                </div>
+                                ${!notification.read ? '<span class="badge bg-primary ms-2">Nouveau</span>' : ''}
+                            </div>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        }
+        
+        function updateNotificationCount() {
+            // Mettre à jour les badges de notification
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+            
+            // Badge messages non lus
+            const unreadMessages = messages.filter(m => !m.read).length;
+            const messageBadge = document.getElementById('message-badge');
+            if (unreadMessages > 0) {
+                messageBadge.textContent = unreadMessages;
+                messageBadge.classList.remove('d-none');
+            } else {
+                messageBadge.classList.add('d-none');
+            }
+            
+            // Badge réservations en attente
+            const pendingReservations = reservations.filter(r => r.status === 'pending').length;
+            const reservationBadge = document.getElementById('reservation-badge');
+            if (pendingReservations > 0) {
+                reservationBadge.textContent = pendingReservations;
+                reservationBadge.classList.remove('d-none');
+            } else {
+                reservationBadge.classList.add('d-none');
+            }
+        }
+        
+        function loadRecentActivity() {
+            const activity = [
+                { time: 'Il y a 5 min', type: 'Réservation', desc: 'Nouvelle réservation de Jean Dupont', status: 'confirmée' },
+                { time: 'Il y a 15 min', type: 'Commande', desc: 'Commande #1234 passée en ligne', status: 'en préparation' },
+                { time: 'Il y a 1 heure', type: 'Message', desc: 'Nouveau message de Sophie Martin', status: 'non lu' },
+                { time: 'Il y a 2 heures', type: 'Réservation', desc: 'Réservation #5678 annulée', status: 'annulée' },
+                { time: 'Il y a 3 heures', type: 'Commande', desc: 'Commande #1235 livrée', status: 'terminée' }
+            ];
+            
+            const container = document.getElementById('activity-table');
+            let html = '';
+            
+            activity.forEach(item => {
+                let statusClass = 'badge bg-';
+                switch(item.status) {
+                    case 'confirmée': statusClass += 'success'; break;
+                    case 'en préparation': statusClass += 'warning'; break;
+                    case 'non lu': statusClass += 'danger'; break;
+                    case 'annulée': statusClass += 'secondary'; break;
+                    case 'terminée': statusClass += 'info'; break;
+                }
+                
+                html += `
+                    <tr>
+                        <td>${item.time}</td>
+                        <td>${item.type}</td>
+                        <td>${item.desc}</td>
+                        <td><span class="badge ${statusClass}">${item.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            let interval = Math.floor(seconds / 31536000);
+            if (interval >= 1) return `il y a ${interval} an${interval > 1 ? 's' : ''}`;
+            
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return `il y a ${interval} mois`;
+            
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return `il y a ${interval} jour${interval > 1 ? 's' : ''}`;
+            
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return `il y a ${interval} heure${interval > 1 ? 's' : ''}`;
+            
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return `il y a ${interval} minute${interval > 1 ? 's' : ''}`;
+            
+            return 'à l\'instant';
+        }
+        
+        function initCharts() {
+            // Chart.js aurait besoin d'être configuré ici
+            // Pour l'instant, nous laissons les conteneurs vides
+            console.log('Charts prêts à être initialisés');
+        }
+    </script>
+    <!-- Dans tous les fichiers HTML, ajoute ceci avant </body> -->
+<script src="js/chatbot.js"></script>
+</body>
+</html>
